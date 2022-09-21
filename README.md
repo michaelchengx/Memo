@@ -11,15 +11,15 @@
 ```
 
 ### 项目展示
-![](D:\VS Code\Vue_CLI_workspace\vue_test\01.png)
+![](README.assets/01.png)
 
-![](D:\VS Code\Vue_CLI_workspace\vue_test\02.png)
+![](README.assets/02.png)
 
-![](D:\VS Code\Vue_CLI_workspace\vue_test\03.png)
+![](README.assets/03.png)
 
 
 
-![](D:\VS Code\Vue_CLI_workspace\vue_test\04.png)
+![](README.assets/04.png)
 
 
 
