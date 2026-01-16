@@ -1,142 +1,42 @@
-<!-- eslint-disable no-unused-vars -->
-<template>
-	<div id="app">
-		<div class="todo-container">
-			<div class="todo-wrap">
-				<my-header @addTodo="addTodo"></my-header>
-				<my-list
-					:todos="todos"
-					:checkTodo="checkTodo"
-					:deleteTodo="deleteTodo"
-				></my-list>
-				<my-footer
-					:todos="todos"
-					@checkAllTodo="checkAllTodo"
-					@clearAllTodo="clearAllTodo"
-				></my-footer>
-			</div>
-		</div>
-	</div>
-</template>
+<script setup>
+import TodoInput from './components/TodoInput.vue'
+import TodoList from './components/TodoList.vue'
+import TodoFooter from './components/TodoFooter.vue'
+import ConfirmModal from './components/ConfirmModal.vue'
+import { useTodoStore } from './stores/todoStore'
 
-<script>
-//引入组件
-import MyHeader from "./components/MyHeader.vue";
-import MyList from "./components/MyList.vue";
-import MyFooter from "./components/MyFooter.vue";
-
-export default {
-	name: "App",
-	components: {
-		MyHeader,
-		MyList,
-		MyFooter,
-	},
-	data() {
-		return {
-			todos: JSON.parse(localStorage.getItem("todos")) || [],
-		};
-	},
-	methods: {
-		//添加待办事项
-		addTodo(todoObj) {
-			this.todos.unshift(todoObj);
-		},
-		//取消勾选事项
-		checkTodo(id) {
-			this.todos.forEach((todo) => {
-				if (todo.id === id) todo.done = !todo.done;
-			});
-		},
-		//更新待办事项
-		updateTodo(id, title) {
-			this.todos.forEach((todo) => {
-				if (todo.id === id) todo.title = title;
-			});
-		},
-		//删除待办事项
-		deleteTodo(id) {
-			this.todos = this.todos.filter((todo) => {
-				return todo.id !== id;
-			});
-		},
-		//全选或者取消全选
-		checkAllTodo(done) {
-			this.todos.forEach((todo) => {
-				todo.done = done;
-			});
-		},
-		//清除所有待办事项
-		clearAllTodo() {
-			this.todos = this.todos.filter((todo) => {
-				return !todo.done;
-			});
-		},
-	},
-	watch: {
-		todos: {
-			deep: true,
-			handler(value) {
-				localStorage.setItem("todos", JSON.stringify(value));
-			},
-		},
-	},
-	mounted() {
-		this.$bus.$on("checkTodo", this.checkTodo);
-		this.$bus.$on("updateTodo", this.updateTodo);
-		this.$bus.$on("deleteTodo", this.deleteTodo);
-	},
-	beforeDestroy() {
-		this.$bus.$off("checkTodo");
-		this.$bus.$off("updateTodo");
-		this.$bus.$off("deleteTodo");
-	},
-};
+// State is managed in the store, but we might want to initialize or just show the structure
+const store = useTodoStore()
 </script>
 
-<style>
+<template>
+  <div
+    class="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center py-10 px-4">
+    <div
+      class="w-full max-w-2xl bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden transition-all duration-200 hover:shadow-indigo-500/50">
+      <div class="p-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center tracking-wide">
+          <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-violet-600">
+            Memo Task Manager
+          </span>
+        </h1>
 
-body {
-	background: #fff;
-}
-.btn {
-	display: inline-block;
-	padding: 4px 12px;
-	margin-bottom: 0;
-	font-size: 14px;
-	line-height: 20px;
-	text-align: center;
-	vertical-align: middle;
-	cursor: pointer;
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),
-		0 1px 2px rgba(0, 0, 0, 0.05);
-	border-radius: 4px;
-}
-.btn-danger {
-	color: #fff;
-	background-color: #da4f49;
-	border: 1px solid #bd362f;
-}
-.btn-edit {
-	color: #fff;
-	background-color: skyblue;
-	border: 1px solid rgb(103, 159, 180);
-	margin-right: 5px;
-}
-.btn-danger:hover {
-	color: #fff;
-	background-color: #bd362f;
-}
-.btn:focus {
-	outline: none;
-}
-.todo-container {
-	width: 600px;
-	margin: 0 auto;
-}
-.todo-container .todo-wrap {
-	padding: 10px;
-	border: 1px solid #ddd;
-	border-radius: 5px;
-}
+        <TodoInput />
+
+        <div class="mt-6">
+          <TodoList />
+        </div>
+
+        <div class="mt-6 border-t border-gray-200 pt-4">
+          <TodoFooter />
+        </div>
+      </div>
+    </div>
+
+    <ConfirmModal />
+  </div>
+</template>
+
+<style scoped>
+/* Scoped styles if necessary, but mostly using Tailwind */
 </style>
